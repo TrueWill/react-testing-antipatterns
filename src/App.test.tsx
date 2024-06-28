@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  cleanup,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import App from "./App";
 import { act } from "react";
 
@@ -39,11 +45,22 @@ describe("App", () => {
     });
   });
 
-  it("should render", () => {
-    render(<App />);
+  describe("Screen", () => {
+    it("should use screen", () => {
+      const { getByText } = render(<App />);
 
-    expect(
-      screen.getByText("React Testing Library antipatterns"),
-    ).not.toBeNull();
+      expect(getByText("React Testing Library antipatterns")).not.toBeNull();
+    });
+  });
+
+  describe("FindBy", () => {
+    it("should use find queries", async () => {
+      render(<App />);
+
+      const button = screen.getByRole("button", { name: /click me/i });
+      fireEvent.click(button);
+
+      await waitFor(() => expect(screen.getByText("done")).not.toBeNull());
+    });
   });
 });
