@@ -63,4 +63,14 @@ describe("App", () => {
       await waitFor(() => expect(screen.getByText("done")).not.toBeNull());
     });
   });
+
+  describe("Best query", () => {
+    it("should use the right query", () => {
+      render(<App />);
+
+      const button = screen.findByText("Click me");
+
+      expect(button).not.toBeNull();
+    });
+  });
 });
