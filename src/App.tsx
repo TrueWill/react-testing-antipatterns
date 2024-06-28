@@ -13,9 +13,7 @@ function App() {
   return (
     <>
       <h1>React Testing Library antipatterns</h1>
-      <div className="my-class" data-testid="find-me">
-        Not particularly accessible
-      </div>
+      <div className="my-class">Not particularly accessible</div>
       <button type="button" onClick={handleClick}>
         Click me
       </button>

@@ -2,12 +2,12 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   render,
   screen,
+  // I ran into issues without this.
+  // eslint-disable-next-line testing-library/no-manual-cleanup
   cleanup,
-  fireEvent,
-  waitFor,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import App from "./App";
-import { act } from "react";
 
 describe("App", () => {
   afterEach(cleanup);
@@ -16,51 +16,45 @@ describe("App", () => {
     it("should be findable", () => {
       render(<App />);
 
-      expect(screen.getByTestId("find-me")).not.toBeNull();
-    });
-
-    it("should be queryable", () => {
-      const { container } = render(<App />);
-
-      container.querySelector(".my-class");
-
-      expect(container.querySelector(".my-class")).not.toBeNull();
+      // Not perfect but better
+      expect(
+        screen.getByText(/not particularly accessible/i),
+      ).toBeInTheDocument();
     });
   });
 
   describe("Act", () => {
     it("should not need act", async () => {
+      // Invoke before calling render
+      const user = userEvent.setup();
       render(<App />);
 
       const button = screen.getByRole("button", { name: /click me/i });
+      await user.click(button);
 
-      // I tried to create an example that would give the "not wrapped in act" warning
-      // but never saw it.
-
-      act(() => {
-        fireEvent.click(button);
-      });
-
-      expect(await screen.findByText("done")).not.toBeNull();
+      expect(await screen.findByText(/done/i)).toBeInTheDocument();
     });
   });
 
   describe("Screen", () => {
     it("should use screen", () => {
-      const { getByText } = render(<App />);
+      render(<App />);
 
-      expect(getByText("React Testing Library antipatterns")).not.toBeNull();
+      expect(
+        screen.getByText(/react testing library antipatterns/i),
+      ).toBeInTheDocument();
     });
   });
 
   describe("FindBy", () => {
     it("should use find queries", async () => {
+      const user = userEvent.setup();
       render(<App />);
 
       const button = screen.getByRole("button", { name: /click me/i });
-      fireEvent.click(button);
+      await user.click(button);
 
-      await waitFor(() => expect(screen.getByText("done")).not.toBeNull());
+      expect(await screen.findByText(/done/i)).toBeInTheDocument();
     });
   });
 
@@ -68,9 +62,9 @@ describe("App", () => {
     it("should use the right query", () => {
       render(<App />);
 
-      const button = screen.findByText("Click me");
+      const button = screen.getByRole("button", { name: /click me/i });
 
-      expect(button).not.toBeNull();
+      expect(button).toBeInTheDocument();
     });
   });
 });
