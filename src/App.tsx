@@ -6,7 +6,7 @@ function App() {
 
   async function handleClick() {
     setStatus("pending");
-    await sleep(500);
+    await sleep(250);
     setStatus("done");
   }
 
