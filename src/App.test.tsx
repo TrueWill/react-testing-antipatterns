@@ -1,9 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import App from "./App";
-import { act, useEffect, useState } from "react";
-
-global.IS_REACT_ACT_ENVIRONMENT = false;
+import { act } from "react";
 
 describe("App", () => {
   afterEach(cleanup);
